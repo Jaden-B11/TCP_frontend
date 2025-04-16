@@ -1,21 +1,4 @@
-import { Text, View, StyleSheet } from 'react-native';
 
-export default function Index() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>default brah</Text>
-    </View>
-  );
-}
+import HomeScreen from '../screens/HomeScreen';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#25292e',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    color: '#fff',
-  },
-});
+export default HomeScreen;

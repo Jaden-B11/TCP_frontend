@@ -112,7 +112,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     alignItems: 'center',
-    width: '60%',
+    display: 'flex',
+    width: 375,
   },
   cardTitle: {
     fontSize: 22,

@@ -40,6 +40,16 @@ export default function RootLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="search"
+        options={{
+          title: 'Search',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="search" size={size} color={color} />
+          ),
+        }}
+      />
     </Tabs>
+
   );
 }

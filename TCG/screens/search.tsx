@@ -2,9 +2,17 @@
 // npm i
 //npm install axios
 //npm install @react-native-picker/picker
-
 import React, { useState } from 'react';
-import { View, Text, TextInput, Image, Button, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
 import axios from 'axios';
 import Constants from 'expo-constants';
 import { Picker } from '@react-native-picker/picker';
@@ -45,16 +53,22 @@ const Search = () => {
   //This is where the user types the pokemon in and filters by rarity
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      
+      <View style={[styles.circle, styles.circleGreen, { top: 40, left: 30, width: 70, height: 70 }]} />
+      <View style={[styles.circle, styles.circlePurple, { top: 180, right: 40, width: 90, height: 90 }]} />
+      <View style={[styles.circle, styles.circleYellow, { bottom: 120, left: 50, width: 80, height: 80 }]} />
+      <View style={[styles.circle, styles.circleBlue, { bottom: 40, right: 70, width: 60, height: 60 }]} />
+
       <Text style={styles.title}>Search Pokémon Card</Text>
 
       <TextInput
         style={styles.input}
         placeholder="Enter Pokémon name"
+        placeholderTextColor="#999"
         value={pokemonName}
         onChangeText={setPokemonName}
       />
-
-      
+  
       <View style={styles.pickerContainer}> 
         <Text style={styles.pickerLabel}>Filter by Rarity:</Text>
         <Picker
@@ -78,12 +92,13 @@ const Search = () => {
 
       {cards.map((card, index) => (
         <View key={card.id || index} style={styles.cardContainer}>
+
           <Text style={styles.cardTitle}>{card.name}</Text>
           <Image source={{ uri: card.images.large }} style={styles.image} />
-          <Text><Text style={styles.bold}>Supertype:</Text> {card.supertype}</Text>
-          <Text><Text style={styles.bold}>Subtype:</Text> {card.subtypes?.join(', ')}</Text>
-          <Text><Text style={styles.bold}>Set:</Text> {card.set.name}</Text>
-          <Text><Text style={styles.bold}>Rarity:</Text> {card.rarity}</Text>
+          <Text style={styles.cardInfo}><Text style={styles.bold}>Supertype:</Text> {card.supertype}</Text>
+          <Text style={styles.cardInfo}><Text style={styles.bold}>Subtype:</Text> {card.subtypes?.join(', ')}</Text>
+          <Text style={styles.cardInfo}><Text style={styles.bold}>Set:</Text> {card.set.name}</Text>
+          <Text style={styles.cardInfo}><Text style={styles.bold}>Rarity:</Text> {card.rarity}</Text>
         </View>
       ))}
     </ScrollView>
@@ -95,19 +110,24 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 20,
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFDE7',
+    paddingTop: 60,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     marginBottom: 20,
     fontWeight: 'bold',
+    color: '#5C3B94',
+    textAlign: 'center',
   },
   input: {
     width: '100%',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#BB6BD9',
+    backgroundColor: '#ffffff',
+    color: '#333',
+    padding: 12,
+    borderRadius: 10,
     marginBottom: 10,
   },
   pickerContainer: {
@@ -127,24 +147,67 @@ const styles = StyleSheet.create({
   },
   picker: {
     width: '100%',
+      },
+  button: {
+    backgroundColor: '#F2C94C',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  buttonText: {
+    color: '#4F2C72',
+    fontWeight: '600',
+    fontSize: 16,
+    textAlign: 'center',
   },
   cardContainer: {
     marginTop: 20,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 16,
     alignItems: 'center',
     marginBottom: 30,
+    borderColor: '#BB6BD9', 
   },
   cardTitle: {
     fontSize: 22,
     marginBottom: 10,
     fontWeight: 'bold',
+    color: '#007E7A',
+  },
+  cardInfo: {
+    color: '#333',
+    fontSize: 14,
+    marginBottom: 6,
   },
   image: {
     width: 300,
     height: 420,
     marginBottom: 10,
+    borderRadius: 12,
   },
   bold: {
     fontWeight: 'bold',
+    color: '#4F2C72',
+  },
+
+  circle: {
+    position: 'absolute',
+    borderRadius: 999,
+    opacity: 0.2,
+  },
+  circleGreen: {
+    backgroundColor: '#6FCF97',
+  },
+  circleYellow: {
+    backgroundColor: '#F2C94C',
+  },
+  circlePurple: {
+    backgroundColor: '#BB6BD9',
+  },
+  circleBlue: {
+    backgroundColor: '#56CCF2',
   },
 });
 

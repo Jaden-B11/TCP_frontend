@@ -1,3 +1,8 @@
+// npm commands to use in TCG
+// npm i
+//npm install axios
+//npm install @react-native-picker/picker
+//npm install form-data
 import React, { useState } from 'react';
 import {
   View,
@@ -11,30 +16,35 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import Constants from 'expo-constants';
+import { Picker } from '@react-native-picker/picker';
 
 const { POKEMON_API_KEY } = Constants.expoConfig?.extra ?? {};
 
 const Search = () => {
   const [pokemonName, setPokemonName] = useState('');
-  const [card, setCard] = useState<any>(null);
+  const [rarity, setRarity] = useState('');
+  const [cards, setCards] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchCard = async () => {
+  const fetchCards = async () => {
     setLoading(true);
-    setCard(null);
+    setCards([]);
 
     try {
-      const response = await axios.get(`https://api.pokemontcg.io/v2/cards?q=name:${pokemonName}`, {
+      const nameQuery = `name:"${pokemonName.trim()}"`;
+      const rarityQuery = rarity ? ` AND rarity:"${rarity}"` : '';
+      const query = nameQuery + rarityQuery;
+
+      const response = await axios.get(`https://api.pokemontcg.io/v2/cards?q=${encodeURIComponent(query)}`, {
         headers: {
           'X-Api-Key': POKEMON_API_KEY,
         },
       });
 
-      const cardData = response.data.data[0];
-      setCard(cardData);
+      setCards(response.data.data.slice(0, 5)); // Show top 5 results
     } catch (error) {
       console.error(error);
-      alert('Card not found or error occurred.');
+      alert('No matching cards found or an error occurred.');
     } finally {
       setLoading(false);
     }
@@ -42,30 +52,43 @@ const Search = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      
-      <View style={[styles.circle, styles.circleGreen, { top: 40, left: 30, width: 70, height: 70 }]} />
-      <View style={[styles.circle, styles.circlePurple, { top: 180, right: 40, width: 90, height: 90 }]} />
-      <View style={[styles.circle, styles.circleYellow, { bottom: 120, left: 50, width: 80, height: 80 }]} />
-      <View style={[styles.circle, styles.circleBlue, { bottom: 40, right: 70, width: 60, height: 60 }]} />
+      <View style={[styles.circle, styles.circleGreen, { width: 300, height: 300, top: -60, left: -60 }]} />
+      <View style={[styles.circle, styles.circleYellow, { width: 200, height: 200, bottom: 80, right: -40 }]} />
+      <View style={[styles.circle, styles.circlePurple, { width: 150, height: 150, top: 200, left: -30 }]} />
+      <View style={[styles.circle, styles.circleBlue, { width: 180, height: 180, bottom: -100, right: -50 }]} />
 
-      <Text style={styles.title}>Search Pokémon Card</Text>
+      <Text style={styles.title}>Search Pokémon Cards</Text>
 
       <TextInput
         style={styles.input}
         placeholder="Enter Pokémon name"
-        placeholderTextColor="#999"
         value={pokemonName}
         onChangeText={setPokemonName}
       />
 
-      <TouchableOpacity style={styles.button} onPress={fetchCard}>
+      <View style={{ width: '100%', marginBottom: 10, borderRadius: 10, borderWidth: 2, borderColor: '#BB6BD9' }}>
+        <Picker
+          selectedValue={rarity}
+          onValueChange={(itemValue) => setRarity(itemValue)}
+          style={{ height: 50, backgroundColor: '#ffffff', borderRadius: 10 }}
+        >
+          <Picker.Item label="Filter by Rarity (Optional)" value="" />
+          <Picker.Item label="Common" value="Common" />
+          <Picker.Item label="Uncommon" value="Uncommon" />
+          <Picker.Item label="Rare" value="Rare" />
+          <Picker.Item label="Rare Holo" value="Rare Holo" />
+          <Picker.Item label="Rare Ultra" value="Rare Ultra" />
+        </Picker>
+      </View>
+
+      <TouchableOpacity style={styles.button} onPress={fetchCards}>
         <Text style={styles.buttonText}>Search</Text>
       </TouchableOpacity>
 
       {loading && <ActivityIndicator size="large" color="#5C3B94" />}
 
-      {card && (
-        <View style={styles.cardContainer}>
+      {cards.map((card) => (
+        <View key={card.id} style={styles.cardContainer}>
           <Text style={styles.cardTitle}>{card.name}</Text>
           <Image source={{ uri: card.images.large }} style={styles.image} />
           <Text style={styles.cardInfo}><Text style={styles.bold}>Supertype:</Text> {card.supertype}</Text>
@@ -73,7 +96,7 @@ const Search = () => {
           <Text style={styles.cardInfo}><Text style={styles.bold}>Set:</Text> {card.set.name}</Text>
           <Text style={styles.cardInfo}><Text style={styles.bold}>Rarity:</Text> {card.rarity}</Text>
         </View>
-      )}
+      ))}
     </ScrollView>
   );
 };
@@ -125,7 +148,7 @@ const styles = StyleSheet.create({
     width: 375,
     elevation: 3,
     borderWidth: 5,
-    borderColor: '#BB6BD9', 
+    borderColor: '#BB6BD9',
   },
   cardTitle: {
     fontSize: 22,
@@ -148,7 +171,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#4F2C72',
   },
-
   circle: {
     position: 'absolute',
     borderRadius: 999,

@@ -1,8 +1,11 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
+import { useNavigation } from '@react-navigation/native';
+import type { NavigationProp } from '@react-navigation/native';
 
 export default function HomeScreen() {
+  const navigation = useNavigation<NavigationProp<any>>();
   return (
     <View style={styles.container}>
 
@@ -23,14 +26,32 @@ export default function HomeScreen() {
       <Text style={styles.subtitle}>Trade. Collect. Show off your monsters!</Text>
 
       <View style={styles.buttonGroup}>
-        <TouchableOpacity style={[styles.button, styles.buttonGreen]}>
+      <TouchableOpacity
+          style={[styles.button, styles.buttonGreen]}
+          onPress={() => navigation.navigate('OpenPack')}
+        >
           <Text style={styles.buttonText}>Open a Pack</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.buttonPurple]}>
+
+        <TouchableOpacity
+          style={[styles.button, styles.buttonPurple]}
+          onPress={() => navigation.navigate('Collection')}
+        >
           <Text style={styles.buttonText}>View Collection</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.buttonBlue]}>
+
+        <TouchableOpacity
+          style={[styles.button, styles.buttonBlue]}
+          onPress={() => navigation.navigate('Profile')}
+        >
           <Text style={styles.buttonText}>Your Profile</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.button, styles.buttonYellow]}
+          onPress={() => navigation.navigate('Search')}
+        >
+          <Text style={styles.buttonText}>Search a Card</Text>
         </TouchableOpacity>
       </View>
     </View>

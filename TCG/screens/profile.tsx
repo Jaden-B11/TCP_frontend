@@ -37,14 +37,16 @@ export default function ProfileScreen() {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFDE7',
+    backgroundColor: '#c4b1cc',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
     paddingTop: 60,
+    
   },
   topImage: {
     width: 260,
@@ -52,16 +54,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#5C3B94',
-    marginBottom: 8,
+    fontSize: 26,
+    color: '#4d205a',
+    marginBottom: 10,
     textAlign: 'center',
+    fontWeight: '900',
   },
   subtitle: {
-    fontSize: 16,
-    color: '#007E7A',
-    marginBottom: 28,
+    fontSize: 19,
+    color: '#855581',
+    fontWeight: '900',
+    marginBottom: 30,
     textAlign: 'center',
   },
   buttonGroup: {
@@ -73,28 +76,40 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     borderRadius: 16,
     marginVertical: 8,
-    width: '80%',
+    width: '60%',
     alignItems: 'center',
-    elevation: 2,
+
+    shadowColor: '#7c385c',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.8,
+    shadowRadius: 6,
+    elevation: 4,
   },
   buttonGreen: {
-    backgroundColor: '#6FCF97',
+    backgroundColor: '#d49145',
+    borderColor: '#7c385c', 
+    borderWidth: 3,
   },
   buttonPurple: {
-    backgroundColor: '#BB6BD9',
+    backgroundColor: '#7864b1',
+    borderColor: '#7c385c', 
+    borderWidth: 3,
   },
   buttonYellow: {
-    backgroundColor: '#F2C94C',
+    backgroundColor: '#dbb925',
+    borderColor: '#7c385c', 
+    borderWidth: 3,
   },
   buttonBlue: {
-    backgroundColor: '#56CCF2',
+    backgroundColor: '#82bcd6',
+    borderColor: '#7c385c', 
+    borderWidth: 3,
   },
   buttonText: {
     color: '#fff',
-    fontWeight: '600',
-    fontSize: 16,
+    fontWeight: '900',
+    fontSize: 18,
   },
-
 
   circle: {
     position: 'absolute',
@@ -102,15 +117,15 @@ const styles = StyleSheet.create({
     opacity: 0.2,
   },
   circleGreen: {
-    backgroundColor: '#6FCF97',
+    backgroundColor: '#a772a3',
   },
   circleYellow: {
-    backgroundColor: '#F2C94C',
+    backgroundColor: '#69294b',
   },
   circlePurple: {
-    backgroundColor: '#BB6BD9',
+    backgroundColor: '#552663',
   },
   circleBlue: {
-    backgroundColor: '#56CCF2',
+    backgroundColor: '#5e538d',
   },
 });

@@ -19,8 +19,8 @@ export default function ProfileScreen() {
 
       <Image source={require('../assets/images/_profile.png')} style={styles.topImage} />
 
-      <Text style={styles.title}>Your Profile!!</Text>
-      <Text style={styles.subtitle}>PLACEHOLDER_RANK • PLACEHOLDER_NAME</Text>
+      <Text style={styles.title}>Your Profile!</Text>
+      <Text style={styles.subtitle}>Manage and Update your profile.</Text>
 
       <View style={styles.buttonGroup}>
         <TouchableOpacity style={[styles.button, styles.buttonGreen]}>

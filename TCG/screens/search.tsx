@@ -41,7 +41,7 @@ const Search = () => {
         },
       });
 
-      setCards(response.data.data.slice(0, 5)); // Show top 5 results
+      setCards(response.data.data.slice(0, 8)); // Show top 5 results
     } catch (error) {
       console.error(error);
       alert('No matching cards found or an error occurred.');
@@ -86,17 +86,18 @@ const Search = () => {
       </TouchableOpacity>
 
       {loading && <ActivityIndicator size="large" color="#5C3B94" />}
-
-      {cards.map((card) => (
-        <View key={card.id} style={styles.cardContainer}>
-          <Text style={styles.cardTitle}>{card.name}</Text>
-          <Image source={{ uri: card.images.large }} style={styles.image} />
-          <Text style={styles.cardInfo}><Text style={styles.bold}>Supertype:</Text> {card.supertype}</Text>
-          <Text style={styles.cardInfo}><Text style={styles.bold}>Subtype:</Text> {card.subtypes?.join(', ')}</Text>
-          <Text style={styles.cardInfo}><Text style={styles.bold}>Set:</Text> {card.set.name}</Text>
-          <Text style={styles.cardInfo}><Text style={styles.bold}>Rarity:</Text> {card.rarity}</Text>
-        </View>
-      ))}
+      <View style={styles.cardGrid}>
+        {cards.map((card) => (
+          <View key={card.id} style={styles.cardContainer}>
+            <Text style={styles.cardTitle}>{card.name}</Text>
+            <Image source={{ uri: card.images.large }} style={styles.image} />
+            <Text style={styles.cardInfo}><Text style={styles.bold}>Supertype:</Text> {card.supertype}</Text>
+            <Text style={styles.cardInfo}><Text style={styles.bold}>Subtype:</Text> {card.subtypes?.join(', ')}</Text>
+            <Text style={styles.cardInfo}><Text style={styles.bold}>Set:</Text> {card.set.name}</Text>
+            <Text style={styles.cardInfo}><Text style={styles.bold}>Rarity:</Text> {card.rarity}</Text>
+          </View>
+        ))}
+      </View>
     </ScrollView>
   );
 };
@@ -125,6 +126,12 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 10,
     marginBottom: 10,
+  },
+  cardGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 20, // or use margin in cardContainer for older RN versions
   },
   button: {
     backgroundColor: '#F2C94C',

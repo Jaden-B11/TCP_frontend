@@ -29,19 +29,18 @@ const Search = () => {
   const fetchCards = async () => {
     setLoading(true);
     setCards([]);
-
+  
     try {
-      const nameQuery = `name:"${pokemonName.trim()}"`;
-      const rarityQuery = rarity ? ` AND rarity:"${rarity}"` : '';
-      const query = nameQuery + rarityQuery;
-
-      const response = await axios.get(`https://api.pokemontcg.io/v2/cards?q=${encodeURIComponent(query)}`, {
-        headers: {
-          'X-Api-Key': POKEMON_API_KEY,
+      const backendURL = 'https://tcp-pokemon-api.herokuapp.com/api/search';
+  
+      const response = await axios.get(backendURL, {
+        params: {
+          name: pokemonName.trim(),
+          rarity: rarity,
         },
       });
-
-      setCards(response.data.data.slice(0, 8)); // Show top 5 results
+  
+      setCards(response.data.slice(0, 8));
     } catch (error) {
       console.error(error);
       alert('No matching cards found or an error occurred.');
@@ -49,6 +48,7 @@ const Search = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

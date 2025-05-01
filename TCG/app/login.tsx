@@ -54,7 +54,8 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFDE7',
+    backgroundColor: '#c4b1cc',
+    
   },
   inside: {
       padding: 20,
@@ -126,16 +127,16 @@ const styles = StyleSheet.create({
       opacity: 0.2,
     },
     circleGreen: {
-      backgroundColor: '#6FCF97',
+      backgroundColor: '#a772a3',
     },
     circleYellow: {
-      backgroundColor: '#F2C94C',
+      backgroundColor: '#69294b',
     },
     circlePurple: {
-      backgroundColor: '#BB6BD9',
+      backgroundColor: '#552663',
     },
     circleBlue: {
-      backgroundColor: '#56CCF2',
+      backgroundColor: '#5e538d',
     },
     
 });

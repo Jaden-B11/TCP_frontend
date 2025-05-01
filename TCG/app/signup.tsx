@@ -52,92 +52,91 @@ export default function SignupScreen() {
   );
 }
 
-
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#FFFDE7',
-    },
-    inside: {
-        padding: 20,
-        paddingTop: 60,
-        alignItems: 'center',
-      },
-    section: {
-      width: '100%',
-      maxWidth: 400, 
-      marginBottom: 200,
-    },
-    title: {
-      fontSize: 22,
-      fontWeight: 'bold',
-      marginBottom: 15,
-      textAlign: 'center',
-    },
-    input: {
-      width: '100%',
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: 8,
-      padding: 12,
-      marginBottom: 12,
-      backgroundColor: '#f9f9f9',
-    },
-    button: {
-      width: '100%',
-      backgroundColor: '#BB6BD9',
-      padding: 14,
-      borderRadius: 8,
+  container: {
+    flex: 1,
+    backgroundColor: '#c4b1cc',
+    
+  },
+  inside: {
+      padding: 20,
+      paddingTop: 60,
       alignItems: 'center',
     },
-    buttonText: {
-      color: '#fff',
-      fontWeight: '600',
+  section: {
+    width: '100%',
+    maxWidth: 400, 
+    marginBottom: 200,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  input: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
+    backgroundColor: '#f9f9f9',
+  },
+  button: {
+    width: '100%',
+    backgroundColor: '#BB6BD9',
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  logo: {
+    width: 250,
+    height: 250,
+    marginBottom: 40,
+  },
+  link: {
+      marginTop: 16,
+      alignItems: 'center',
+  },
+  linkText: {
+      color: '#BB6BD9',
+      fontWeight: '500',
+  },
+  card: {
+      width: '100%',
+      maxWidth: 515,
+      backgroundColor: '#ffffff',
+      borderRadius: 16,
+      paddingVertical: 27,
+      padding: 24,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOpacity: 0.1,
+      shadowOffset: { width: 0, height: 4 },
+      shadowRadius: 10,
+      elevation: 5,
     },
-    logo: {
-      width: 250,
-      height: 250,
-      marginBottom: 40,
-    },
-    link: {
-        marginTop: 16,
-        alignItems: 'center',
-    },
-    linkText: {
-        color: '#BB6BD9',
-        fontWeight: '500',
-    },
-    card: {
-        width: '100%',
-        maxWidth: 515,
-        backgroundColor: '#ffffff',
-        borderRadius: 16,
-        paddingVertical: 27,
-        padding: 24,
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 4 },
-        shadowRadius: 10,
-        elevation: 5,
-      },
 
-      circle: {
-        position: 'absolute',
-        borderRadius: 999,
-        opacity: 0.2,
-      },
-      circleGreen: {
-        backgroundColor: '#6FCF97',
-      },
-      circleYellow: {
-        backgroundColor: '#F2C94C',
-      },
-      circlePurple: {
-        backgroundColor: '#BB6BD9',
-      },
-      circleBlue: {
-        backgroundColor: '#56CCF2',
-      },
-      
+    circle: {
+      position: 'absolute',
+      borderRadius: 999,
+      opacity: 0.2,
+    },
+    circleGreen: {
+      backgroundColor: '#a772a3',
+    },
+    circleYellow: {
+      backgroundColor: '#69294b',
+    },
+    circlePurple: {
+      backgroundColor: '#552663',
+    },
+    circleBlue: {
+      backgroundColor: '#5e538d',
+    },
   });

@@ -66,7 +66,7 @@ const Search = () => {
         onChangeText={setPokemonName}
       />
 
-      <View style={{ width: '100%', marginBottom: 10, borderRadius: 10, borderWidth: 2, borderColor: '#BB6BD9' }}>
+      <View style={{ width: '100%', marginBottom: 10, borderRadius: 10, borderWidth: 2, borderColor: '#4d205a' }}>
         <Picker
           selectedValue={rarity}
           onValueChange={(itemValue) => setRarity(itemValue)}
@@ -106,20 +106,20 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 20,
     alignItems: 'center',
-    backgroundColor: '#FFFDE7',
+    backgroundColor: '#c4b1cc',
     paddingTop: 60,
   },
   title: {
     fontSize: 26,
     marginBottom: 20,
-    fontWeight: 'bold',
-    color: '#5C3B94',
+    color: '#4d205a',
     textAlign: 'center',
+    fontWeight: '900',
   },
   input: {
     width: '100%',
     borderWidth: 2,
-    borderColor: '#BB6BD9',
+    borderColor: '#4d205a',
     backgroundColor: '#ffffff',
     color: '#333',
     padding: 12,
@@ -127,17 +127,25 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: '#F2C94C',
+    backgroundColor: '#dbb925',
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 10,
     marginBottom: 20,
+    shadowColor: '#7c385c',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.8,
+    shadowRadius: 6,
+    elevation: 4,
+    borderColor: '#7c385c', 
+    borderWidth: 3,
   },
   buttonText: {
-    color: '#4F2C72',
-    fontWeight: '600',
-    fontSize: 16,
+    color: '#fff',
+    fontWeight: '900',
+    fontSize: 18,
     textAlign: 'center',
+    
   },
   cardContainer: {
     marginTop: 20,
@@ -149,6 +157,10 @@ const styles = StyleSheet.create({
     elevation: 3,
     borderWidth: 5,
     borderColor: '#BB6BD9',
+    shadowColor: '#7c385c',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.8,
+    shadowRadius: 6,
   },
   cardTitle: {
     fontSize: 22,
@@ -177,16 +189,16 @@ const styles = StyleSheet.create({
     opacity: 0.2,
   },
   circleGreen: {
-    backgroundColor: '#6FCF97',
+    backgroundColor: '#a772a3',
   },
   circleYellow: {
-    backgroundColor: '#F2C94C',
+    backgroundColor: '#69294b',
   },
   circlePurple: {
-    backgroundColor: '#BB6BD9',
+    backgroundColor: '#552663',
   },
   circleBlue: {
-    backgroundColor: '#56CCF2',
+    backgroundColor: '#5e538d',
   },
 });
 

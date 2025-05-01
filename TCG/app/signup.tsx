@@ -24,7 +24,7 @@ export default function SignupScreen() {
       <ScrollView contentContainerStyle={styles.inside}>
         <View style={styles.card}>
           <Image
-            source={require('../assets/images/PackSwap2.png')}
+            source={require('../assets/images/_logo.png')}
             style={styles.logo}
             resizeMode="contain"
           />

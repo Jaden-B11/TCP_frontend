@@ -1,9 +1,23 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { auth } from '../utils/firebase';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 const { width, height } = Dimensions.get('window');
 import { useNavigation } from '@react-navigation/native';
 import type { NavigationProp } from '@react-navigation/native';
+
+const db = getFirestore();
+
 export default function ProfileScreen() {
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      // onAuthStateChanged in RootLayout will auto-redirect to Login
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+  
   const navigation = useNavigation<NavigationProp<any>>();
   return (
     <View style={styles.container}>
@@ -26,11 +40,8 @@ export default function ProfileScreen() {
         <TouchableOpacity style={[styles.button, styles.buttonGreen]}>
           <Text style={styles.buttonText}>Edit Profile</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.buttonBlue]}
-          onPress={() => navigation.navigate('Collection')}
-        >
-          <Text style={styles.buttonText}>Your Collections!!!</Text>
+        <TouchableOpacity style={[styles.button, styles.logoutButton]} onPress={handleLogout}>
+          <Text style={[styles.buttonText, styles.logoutText]}>Log Out</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -127,5 +138,13 @@ const styles = StyleSheet.create({
   },
   circleBlue: {
     backgroundColor: '#5e538d',
+  },
+  logoutButton: {
+    backgroundColor: '#db4650',
+    borderColor: '#7c385c',
+    borderWidth: 3,
+  },
+  logoutText: {
+    fontSize: 16,
   },
 });

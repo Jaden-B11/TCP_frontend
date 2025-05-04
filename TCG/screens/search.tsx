@@ -17,6 +17,7 @@ import {
 import axios from 'axios';
 import Constants from 'expo-constants';
 import { Picker } from '@react-native-picker/picker';
+import { fetchPokemonCards } from '../utils/api';
 
 const { POKEMON_API_KEY } = Constants.expoConfig?.extra ?? {};
 
@@ -29,26 +30,22 @@ const Search = () => {
   const fetchCards = async () => {
     setLoading(true);
     setCards([]);
-
+  
     try {
-      const nameQuery = `name:"${pokemonName.trim()}"`;
-      const rarityQuery = rarity ? ` AND rarity:"${rarity}"` : '';
-      const query = nameQuery + rarityQuery;
-
-      const response = await axios.get(`https://api.pokemontcg.io/v2/cards?q=${encodeURIComponent(query)}`, {
-        headers: {
-          'X-Api-Key': POKEMON_API_KEY,
-        },
-      });
-
-      setCards(response.data.data.slice(0, 8)); // Show top 5 results
+      const results = await fetchPokemonCards(pokemonName, rarity);
+  
+      if (!results || results.length === 0) {
+        alert('No matching cards found.');
+      } else {
+        setCards(results.slice(0, 8)); // or however many you want to show
+      }
     } catch (error) {
-      console.error(error);
-      alert('No matching cards found or an error occurred.');
+      alert('An error occurred while fetching cards.');
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -194,6 +191,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     borderRadius: 999,
     opacity: 0.2,
+    zIndex: -1,
   },
   circleGreen: {
     backgroundColor: '#a772a3',
@@ -210,3 +208,23 @@ const styles = StyleSheet.create({
 });
 
 export default Search;
+
+
+// const fetchCards = async () => {
+//   setLoading(true);
+//   setCards([]);
+
+//   try {
+//     const results = await fetchPokemonCards(pokemonName.trim());
+
+//     if (!results || results.length === 0) {
+//       alert('No matching cards found.');
+//     } else {
+//       setCards(results.slice(0, 5)); // Limit to top 5
+//     }
+//   } catch (error) {
+//     alert('An error occurred while fetching cards.');
+//   } finally {
+//     setLoading(false);
+//   }
+// };

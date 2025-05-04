@@ -11,9 +11,19 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NavigationProp } from '@react-navigation/native';
+import { useState } from 'react';
+import { registerUser } from '../utils/auth'; // adjust path as needed
+
+
+
 
 export default function SignupScreen() {
   const navigation = useNavigation<NavigationProp<any>>();
+
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -31,19 +41,58 @@ export default function SignupScreen() {
 
           <View style={styles.section}>
             <Text style={styles.title}>Sign Up</Text>
-            <TextInput style={styles.input} placeholder="USERNAME" />
-            <TextInput style={styles.input} placeholder="EMAIL" />
-            <TextInput style={styles.input} placeholder="PASSWORD" secureTextEntry />
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>SIGN UP</Text>
-            </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              placeholder="Uername"
+              value={username}
+              onChangeText={setUsername}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
 
             {/* 🔙 Link to Login */}
+            <TouchableOpacity
+              style={styles.button}
+              onPress={async () => {
+                try {
+                  if (!email || !password) {
+                    alert('Please enter an email and password');
+                    return;
+                  }
+
+                  const user = await registerUser(email, password);
+
+                  if (user?.email) {
+                    alert('Account created for ' + user.email);
+                    // Navigate or do something with the user
+                  } else {
+                    alert('Signup succeeded, but user email is missing.');
+                  }
+
+                } catch (err: any) {
+                  alert('Signup failed. ' + (err?.message || 'Unknown error'));
+                  console.error(err);
+                }
+              }}
+            >
+              <Text style={styles.buttonText}>SIGN UP</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={() => navigation.navigate('Login')}
               style={styles.link}
             >
-              <Text style={styles.linkText}>Already have an account? Login</Text>
+              <Text style={styles.linkText}>Have an account? Log in</Text>
             </TouchableOpacity>
           </View>
         </View>

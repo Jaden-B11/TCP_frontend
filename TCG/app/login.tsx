@@ -11,9 +11,16 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NavigationProp } from '@react-navigation/native';
+import { loginUser, getIdToken } from '../utils/auth';
+import { useState } from 'react';
+
 
 export default function LoginScreen() {
   const navigation = useNavigation<NavigationProp<any>>();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -21,7 +28,6 @@ export default function LoginScreen() {
             <View style={[styles.circle, styles.circlePurple, { top: 120, right: 60, width: 70, height: 70 }]} />
             <View style={[styles.circle, styles.circleYellow, { bottom: 120, left: 100, width: 100, height: 100 }]} />
             <View style={[styles.circle, styles.circleBlue, { bottom: 40, right: 30, width: 50, height: 50 }]} />
-            <ScrollView contentContainerStyle={styles.inside}></ScrollView>
       <ScrollView contentContainerStyle={styles.inside}>
         <View style={styles.card}>
           <Image
@@ -32,10 +38,51 @@ export default function LoginScreen() {
 
           <View style={styles.section}>
             <Text style={styles.title}>Login</Text>
-            <TextInput style={styles.input} placeholder="your email" />
-            <TextInput style={styles.input} placeholder="password" secureTextEntry />
-            <TouchableOpacity style={styles.button}>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
+
+            <TouchableOpacity
+              style={styles.button}
+              
+              onPress={async () => {
+                try {
+                  if (!email || !password) {
+                    alert('Please enter an email and password');
+                    return;
+                  }
+
+                  const user = await loginUser(email, password);
+                  const token = await getIdToken();
+
+                  if (user?.email) {
+                    alert('Welcome back, ' + user.email);
+                    console.log('Firebase ID token:', token);
+
+                    // Navigate to Home or Search page
+                    navigation.navigate('Home');
+                  } else {
+                    alert('Login successful but user data is incomplete.');
+                  }
+                } catch (err: any) {
+                  alert('Login failed: ' + (err?.message || 'Unknown error'));
+                  console.error(err);
+                }
+              }}
+            >
               <Text style={styles.buttonText}>LOGIN</Text>
+
+              
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -44,12 +91,17 @@ export default function LoginScreen() {
             >
               <Text style={styles.linkText}>Don't have an account? Sign up here</Text>
             </TouchableOpacity>
+
+            {/* <Text style={styles.linkText}>Don't have an account? Sign up here</Text> */}
+
           </View>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {

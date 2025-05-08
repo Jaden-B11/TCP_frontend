@@ -1,14 +1,71 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
-
-const { width, height } = Dimensions.get('window');
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NavigationProp } from '@react-navigation/native';
+import { getIdToken } from '../utils/auth';
+import { auth } from '../utils/firebase';
+
+const { height } = Dimensions.get('window');
+
+type Trade = {
+  id: number;
+  offeringUser: {
+    uid: string;
+    email: string;
+  };
+  offeredCard: {
+    id: string;
+    name: string;
+    imageUrl: string;
+    rarity: string;
+  };
+  requestedCard: null | {
+    id: string;
+    name: string;
+    imageUrl: string;
+    rarity: string;
+  };
+};
 
 export default function HomeScreen() {
+  const currentUserId = auth.currentUser?.uid;
   const navigation = useNavigation<NavigationProp<any>>();
-  return (
-    <View style={styles.container}>
+  const [trades, setTrades] = useState<Trade[]>([]);
+  const [loadingTrades, setLoadingTrades] = useState(true);
 
+  useEffect(() => {
+    const fetchTrades = async () => {
+      try {
+        const token = await getIdToken();
+        const res = await fetch('https://tcp-pokemon-api-61738bdf9d6e.herokuapp.com/api/trades/forum', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        console.log('Fetched trades:', data);
+        setTrades(data);
+      } catch (err) {
+        console.error('Failed to fetch trades:', err);
+      } finally {
+        setLoadingTrades(false);
+      }
+    };
+
+    fetchTrades();
+  }, []);
+
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      {/* Decorative Circles */}
       <View style={[styles.circle, styles.circleGreen, { top: 50, left: 40, width: 80, height: 80 }]} />
       <View style={[styles.circle, styles.circlePurple, { top: 100, right: 60, width: 60, height: 60 }]} />
       <View style={[styles.circle, styles.circleYellow, { bottom: 150, left: 100, width: 100, height: 100 }]} />
@@ -22,50 +79,70 @@ export default function HomeScreen() {
 
       <Image source={require('../assets/images/_logo.png')} style={styles.topImage} />
 
-      <Text style={styles.title}> Welcome to PackSwap!</Text>
+      <Text style={styles.title}>Welcome to PackSwap!</Text>
       <Text style={styles.subtitle}>Trade. Collect. Show off your monsters!</Text>
 
-      <View style={styles.buttonGroup}>
+      <Text style={styles.tradeForumTitle}>Trade Forum</Text>
       <TouchableOpacity
-          style={[styles.button, styles.buttonYellow]}
-          onPress={() => navigation.navigate('OpenPack')}
-        >
-          <Text style={styles.buttonText}>Open a Pack</Text>
-        </TouchableOpacity>
+        style={[styles.button, styles.buttonPurple]}
+        onPress={() => navigation.navigate('MyTrades')}
+      >
+        <Text style={styles.buttonText}>My Trades</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.button, styles.buttonGreen]}
-          onPress={() => navigation.navigate('Collection')}
-        >
-          <Text style={styles.buttonText}>View Collection</Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.button, styles.buttonBlue]}
-          onPress={() => navigation.navigate('Profile')}
-        >
-          <Text style={styles.buttonText}>Your Profile</Text>
-        </TouchableOpacity>
+      {loadingTrades ? (
+        <Text style={styles.loadingText}>Loading trades...</Text>
+      ) : (
+        trades.map((trade) => (
+          <View key={trade.id} style={styles.tradeCard}>
+            <Text style={styles.emailText}>{trade.offeringUser.email} wants to trade:</Text>
 
-        <TouchableOpacity
-          style={[styles.button, styles.buttonPurple]}
-          onPress={() => navigation.navigate('Search')}
-        >
-          <Text style={styles.buttonText}>Search a Card</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+            <View style={styles.cardRow}>
+              <View style={styles.cardBox}>
+                <Text style={styles.label}>Offering</Text>
+                <Image source={{ uri: trade.offeredCard.imageUrl }} style={styles.image} />
+                <Text style={styles.cardName}>{trade.offeredCard.name}</Text>
+              </View>
+
+              <View style={styles.cardBox}>
+                {trade.requestedCard ? (
+                  <>
+                    <Text style={styles.label}>Wants</Text>
+                    <Image source={{ uri: trade.requestedCard.imageUrl }} style={styles.image} />
+                    <Text style={styles.cardName}>{trade.requestedCard.name}</Text>
+                  </>
+                ) : (
+                  <>
+                    <Text style={styles.label}>Status</Text>
+                    <Text style={styles.cardName}>Open Trade</Text>
+                  </>
+                )}
+              </View>
+            </View>
+
+            {!trade.requestedCard && trade.offeringUser.uid !== currentUserId && (
+              <TouchableOpacity
+                style={[styles.button, styles.buttonPurple, { marginTop: 10 }]}
+                onPress={() => navigation.navigate('OfferTrade', { tradeId: trade.id })}
+              >
+                <Text style={styles.buttonText}>Offer a Trade</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        ))
+      )}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#c4b1cc',
     alignItems: 'center',
-    justifyContent: 'center',
     padding: 20,
     paddingTop: 60,
+    paddingBottom: 100,
   },
   topImage: {
     width: 260,
@@ -86,50 +163,81 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     textAlign: 'center',
   },
-  buttonGroup: {
-    width: '100%',
+  tradeForumTitle: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    color: '#552663',
+    marginBottom: 10,
+    marginTop: 20,
+    textAlign: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#777',
+    marginBottom: 20,
+  },
+  tradeCard: {
+    width: '85%',
+    borderWidth: 2,
+    borderColor: '#BB6BD9',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 20,
+    backgroundColor: '#fff',
+    elevation: 4,
+    marginTop: 20,
+  },
+  emailText: {
+    fontSize: 14,
+    marginBottom: 10,
+    color: '#4d205a',
+  },
+  cardRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  cardBox: {
+    width: '48%',
     alignItems: 'center',
+  },
+  label: {
+    fontWeight: 'bold',
+    color: '#4d205a',
+    marginBottom: 4,
+  },
+  image: {
+    width: 100,
+    height: 150,
+    borderRadius: 8,
+    marginBottom: 6,
+  },
+  cardName: {
+    fontSize: 14,
+    color: '#333',
+    textAlign: 'center',
   },
   button: {
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 16,
     marginVertical: 8,
-    width: '60%',
     alignItems: 'center',
-
     shadowColor: '#7c385c',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.8,
     shadowRadius: 6,
     elevation: 4,
   },
-  buttonGreen: {
-    backgroundColor: '#d49145',
-    borderColor: '#7c385c', 
-    borderWidth: 3,
-  },
   buttonPurple: {
     backgroundColor: '#7864b1',
-    borderColor: '#7c385c', 
-    borderWidth: 3,
-  },
-  buttonYellow: {
-    backgroundColor: '#dbb925',
-    borderColor: '#7c385c', 
-    borderWidth: 3,
-  },
-  buttonBlue: {
-    backgroundColor: '#82bcd6',
-    borderColor: '#7c385c', 
+    borderColor: '#7c385c',
     borderWidth: 3,
   },
   buttonText: {
     color: '#fff',
     fontWeight: '900',
-    fontSize: 18,
+    fontSize: 16,
   },
-
   circle: {
     position: 'absolute',
     borderRadius: 999,

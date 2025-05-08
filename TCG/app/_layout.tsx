@@ -4,9 +4,9 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../utils/firebase'; // adjust this path
+import { auth } from '../utils/firebase';
+import FullBinderScreen from '../screens/FullBinderScreen'; // ✅
 
-// Screens
 import HomeScreen from './index';
 import OpenPackScreen from './open_pack';
 import CollectionScreen from './collection';
@@ -104,7 +104,29 @@ export default function RootLayout() {
         />
       </View>
 
-      {isAuthenticated ? <AppTabs /> : <AuthStack />}
+      <Stack.Navigator>
+        {isAuthenticated ? (
+          <>
+            <Stack.Screen name="Tabs" component={AppTabs} options={{ headerShown: false }} />
+            <Stack.Screen
+              name="FullBinder"
+              component={FullBinderScreen}
+              options={{
+                headerShown: true,
+                title: 'Go Back',
+                headerStyle: { backgroundColor: '#7864b1' },
+                headerTintColor: '#fff',
+                headerTitleStyle: { fontWeight: 'bold' },
+              }}
+            />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
+          </>
+        )}
+      </Stack.Navigator>
     </SafeAreaView>
   );
 }

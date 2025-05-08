@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
-import { fetchUserCollection } from '../utils/api';
-import { useRoute, RouteProp  } from '@react-navigation/native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
+import Toast from 'react-native-toast-message';
+import { fetchUserCollection, postTradeOffer } from '../utils/api';
+import { useRoute, useNavigation } from '@react-navigation/native';
+import type { NavigationProp, RouteProp } from '@react-navigation/native';
 
 type FullBinderRouteParams = {
-    sortBy?: 'rarity';
-  };
-  
+  sortBy?: 'rarity';
+};
 
 type Card = {
   id: string;
@@ -19,8 +28,9 @@ type Card = {
 };
 
 export default function FullBinderScreen() {
-    const route = useRoute<RouteProp<{ FullBinder: FullBinderRouteParams }, 'FullBinder'>>();
-    const sortBy = route.params?.sortBy;
+  const navigation = useNavigation<NavigationProp<any>>();
+  const route = useRoute<RouteProp<{ FullBinder: FullBinderRouteParams }, 'FullBinder'>>();
+  const sortBy = route.params?.sortBy;
 
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,13 +41,9 @@ export default function FullBinderScreen() {
       if (result && Array.isArray(result)) {
         let cleaned = result.filter(
           (card: any) =>
-            card.id &&
-            card.name &&
-            card.rarity &&
-            card.images?.large
+            card.id && card.name && card.rarity && card.images?.large
         );
 
-        // ✅ Optional custom rarity order
         const rarityOrder: Record<string, number> = {
           Common: 1,
           Uncommon: 2,
@@ -47,8 +53,8 @@ export default function FullBinderScreen() {
         };
 
         if (sortBy === 'rarity') {
-          cleaned.sort((a, b) =>
-            (rarityOrder[a.rarity] ?? 999) - (rarityOrder[b.rarity] ?? 999)
+          cleaned.sort(
+            (a, b) => (rarityOrder[a.rarity] ?? 999) - (rarityOrder[b.rarity] ?? 999)
           );
         }
 
@@ -94,6 +100,29 @@ export default function FullBinderScreen() {
                 <Text style={styles.detailLabel}>Quantity: </Text>
                 <Text style={styles.quantityValue}>{card.quantity}</Text>
               </View>
+
+              <TouchableOpacity
+                style={styles.tradeButton}
+                onPress={async () => {
+                  try {
+                    await postTradeOffer(card.id);
+                    Toast.show({
+                      type: 'success',
+                      text1: 'Trade Posted!',
+                      text2: `${card.name} is now in the trade forum.`,
+                    });
+                  } catch (err: any) {
+                    Toast.show({
+                      type: 'error',
+                      text1: 'Error',
+                      text2: 'Could not post trade offer.',
+                    });
+                    console.error(err);
+                  }
+                }}
+              >
+                <Text style={styles.tradeButtonText}>Trade</Text>
+              </TouchableOpacity>
             </View>
           ))}
         </View>
@@ -192,5 +221,28 @@ const styles = StyleSheet.create({
   },
   circleBlue: {
     backgroundColor: '#5e538d',
+  },
+  tradeButton: {
+    marginTop: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#7864b1',
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#4d205a',
+    shadowColor: '#7c385c',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.7,
+    shadowRadius: 4,
+    elevation: 4,
+    alignItems: 'center',
+    width: '100%',
+  },
+  tradeButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
 });

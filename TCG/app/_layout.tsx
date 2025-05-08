@@ -6,6 +6,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../utils/firebase';
 import FullBinderScreen from '../screens/FullBinderScreen'; // ✅
+import OfferTradeScreen from '../screens/OfferTradeScreen';
+import MyTradesScreen from '../screens/MyTradesScreen';
+import Toast from 'react-native-toast-message'
+
+
 
 import HomeScreen from './index';
 import OpenPackScreen from './open_pack';
@@ -109,6 +114,17 @@ export default function RootLayout() {
           <>
             <Stack.Screen name="Tabs" component={AppTabs} options={{ headerShown: false }} />
             <Stack.Screen
+              name="OfferTrade"
+              component={OfferTradeScreen}
+              options={{ headerShown: true, title: 'Offer a Trade' }}
+            />
+            <Stack.Screen
+              name="MyTrades"
+              component={MyTradesScreen}
+              options={{ headerShown: true, title: 'My Trades' }}
+            />
+            
+            <Stack.Screen
               name="FullBinder"
               component={FullBinderScreen}
               options={{
@@ -127,6 +143,7 @@ export default function RootLayout() {
           </>
         )}
       </Stack.Navigator>
+      <Toast />
     </SafeAreaView>
   );
 }

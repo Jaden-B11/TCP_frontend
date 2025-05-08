@@ -1,3 +1,5 @@
+import { getIdToken } from './auth';
+
 export async function fetchPokemonCards(pokemonName, rarity = '') {
     try {
       const nameParam = encodeURIComponent(pokemonName.trim());
@@ -15,6 +17,27 @@ export async function fetchPokemonCards(pokemonName, rarity = '') {
       return data; // return raw response temporarily to inspect structure
     } catch (err) {
       console.error('API Error:', err);
+      return null;
+    }
+  }
+
+  export async function fetchUserCollection() {
+    try {
+      const token = await getIdToken();
+      const res = await fetch('https://tcp-pokemon-api-61738bdf9d6e.herokuapp.com/api/collection', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (!res.ok) {
+        throw new Error(`Failed to fetch collection: ${res.status}`);
+      }
+  
+      const data = await res.json();
+      return data; // should be an array of cards
+    } catch (err) {
+      console.error('Collection fetch error:', err);
       return null;
     }
   }

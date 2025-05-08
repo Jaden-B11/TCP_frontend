@@ -1,8 +1,15 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NavigationProp } from '@react-navigation/native';
+
 
 const { width, height } = Dimensions.get('window');
 
+
+
 export default function CollectionScreen() {
+  const navigation = useNavigation<NavigationProp<any>>();
+
   return (
     <View style={styles.container}>
       
@@ -20,12 +27,20 @@ export default function CollectionScreen() {
       <Text style={styles.subtitle}>Organize and admire your monsters!</Text>
 
       <View style={styles.buttonGroup}>
-        <TouchableOpacity style={[styles.button, styles.buttonGreen]}>
+        <TouchableOpacity
+          style={[styles.button, styles.buttonGreen]}
+          onPress={() => navigation.navigate('FullBinder', { sortBy: 'rarity' })}
+        >
           <Text style={styles.buttonText}>Sort by Rarity</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.buttonPurple]}>
+
+        <TouchableOpacity
+          style={[styles.button, styles.buttonPurple]}
+          onPress={() => navigation.navigate('FullBinder')}
+        >
           <Text style={styles.buttonText}>View Full Binder</Text>
         </TouchableOpacity>
+
       </View>
     </View>
   );

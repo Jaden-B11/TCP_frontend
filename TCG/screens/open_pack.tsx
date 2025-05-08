@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { getIdToken } from '../utils/auth'; // adjust path if needed
+
 import {
   View,
   Text,
@@ -29,23 +31,39 @@ export default function OpenPackScreen() {
     setSelectedPackId(packId);
     setCards([]);
     setLoading(true);
+  
     try {
+      const token = await getIdToken(); // ✅ Get Firebase auth token
+      console.log('Token:', token);
+      
+      if (!token) throw new Error('No auth token');
+  
       const url = `https://tcp-pokemon-api-61738bdf9d6e.herokuapp.com/api/packs/${packId}`;
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+  
       const contentType = response.headers.get('content-type');
-
       if (!contentType?.includes('application/json')) {
-        throw new Error('No json brah');
+        throw new Error('No JSON in response');
       }
+  
       const data = await response.json();
       if (!Array.isArray(data)) throw new Error('Unexpected data format');
+  
       setCards(data);
-    } catch (err: unknown) {
-      alert('I cant get cards man');
+    } catch (err: any) {
+      console.error('Error fetching pack:', err);
+      alert('Failed to open pack. Please try again.');
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
